@@ -1,14 +1,16 @@
-import { Button, Form, Input, Space, Table, TableColumnsType } from "antd";
+import { Button, Form, Input, Space, Spin, Table, TableColumnsType, message } from "antd";
 import { useEffect, useRef, useState, } from "react";
-import { getList } from "../api";
+import { bookDelete, getList } from "../api";
 import MyModel from "./MyModel";
 
 interface Book {
-  handleShow: (open: boolean) => void
+  handleShow: (open: boolean,record?:any) => void
 }
 
 const BookManage = () => {
   const [dataSource, setDataSource] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const modelRef = useRef<Book>(null)
   const columns: TableColumnsType<never> | undefined = [
     {
@@ -37,14 +39,15 @@ const BookManage = () => {
       key: 'action',
       render: (text, record) => (
         <Space>
-          <a>编辑</a>
-          <a>删除</a>
+          <a onClick={()=> modelRef.current?.handleShow(true,record)}>编辑</a>
+          <a onClick={()=>handleDelete(record)}>删除</a>
         </Space>
       )
     },
   ]
   const funGetList = async (name?: string) => {
-    const res = await getList({ name })
+    setLoading(true)
+    const res = await getList({ name }).finally(()=>setTimeout(()=>{setLoading(false)},500))
     console.log(res)
     setDataSource(res?.data || [])
   }
@@ -52,8 +55,16 @@ const BookManage = () => {
     funGetList()
   }, [])
 
+  const handleDelete = async(record:any) =>{
+    const data =  await bookDelete(record.id)
+    if(data.status==201||data.status==200){
+      funGetList()
+       message.success('删除成功！')
+    }
+  }
   return (
     <div>
+      <Spin spinning={loading}>
       <Form layout="inline" onFinish={(values) => {
         funGetList(values?.name)
       }}>
@@ -74,7 +85,8 @@ const BookManage = () => {
         </Space>
       </Form>
       <Table style={{ marginTop: 20 }} columns={columns} dataSource={dataSource} rowKey='id' />
-      <MyModel modelRef={modelRef} />
+      <MyModel modelRef={modelRef} funGetList={funGetList} />
+      </Spin>
     </div>
   )
 }

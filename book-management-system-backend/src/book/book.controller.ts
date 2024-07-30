@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 
 @Controller('book')
 export class BookController {
@@ -30,5 +32,13 @@ export class BookController {
   @Delete('delete/:id')
   async delete(@Param('id') id: string) {
     return this.bookService.delete(id)
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file',{
+    dest:'uploads'
+  }))
+  async upload(@UploadedFile() file: Express.Multer.File) {
+    return file.path
   }
 }

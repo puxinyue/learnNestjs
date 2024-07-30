@@ -16,3 +16,15 @@ export const register = async (data: any) => {
 export const getList = async (data: any) => {
     return await requst.get('/book/list', { params: data })
 }
+
+export const bookCreate = async (data: any) => {
+    return await requst.post('/book/create', { ...data })
+}
+
+export const bookDelete = async (id: string) => {
+    return await requst.delete(`/book/delete/${id}`)
+}
+
+export const bookUpdate = async (data: any) => {
+    return await requst.put(`/book/update`,{...data})
+}
