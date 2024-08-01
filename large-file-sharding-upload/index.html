@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <input id="fileInput" type="file" />
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      const chunkSize = 20 * 1024; // 20KB  分成20KB一片
+      const totalChunks = Math.ceil(file.size / chunkSize);
+      const chunks = [];
+      let startPos = 0;
+      while (startPos < file.size) {
+        const chunk = file.slice(startPos, Math.min(startPos + chunkSize, file.size));
+        chunks.push(chunk);
+        startPos += chunkSize;
+      }
+
+      const uploadId = Date.now();
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const formData = new FormData();
+        formData.append('files', chunk);
+        formData.append('uploadId', uploadId);
+        formData.append('chunkIndex', i);
+        formData.append('totalChunks', totalChunks);
+        formData.append('filename', `${file.name}-${i}`);
+        const res = await axios.post('http://localhost:3000/upload', formData);
+        console.log(res.data);
+      }
+      // const res = await axios.post('http://localhost:3000/merge', {
+      //   uploadId,
+      //   filename: file.name,
+      //   totalChunks
+      // });
+      // console.log(res.data);
+    });
+
+  </script>
+
+</body>
+
+</html>
