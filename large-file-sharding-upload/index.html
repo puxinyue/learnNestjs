@@ -23,8 +23,9 @@
         chunks.push(chunk);
         startPos += chunkSize;
       }
-
+      const rodam = Math.random().toString().slice(2,8)
       const uploadId = Date.now();
+      const task = []
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
         const formData = new FormData();
@@ -32,11 +33,11 @@
         formData.append('uploadId', uploadId);
         formData.append('chunkIndex', i);
         formData.append('totalChunks', totalChunks);
-        formData.append('filename', `${file.name}-${i}`);
-        const res = await axios.post('http://localhost:3000/upload', formData);
-        console.log(res.data);
+        formData.set('name', `${rodam}_${file.name}-${i}`);
+        task.push(axios.post('http://localhost:3000/upload', formData))
       }
-      // const res = await axios.post('http://localhost:3000/merge', {
+      await Promise.all(task)
+      // const res = await axios.get('http://localhost:3000/merge', {
       //   uploadId,
       //   filename: file.name,
       //   totalChunks
