@@ -13,7 +13,7 @@ export class AppController {
 
   @Post('upload')
   @UseInterceptors(FilesInterceptor('files',20,{
-    dest: './uploads'
+    dest: 'uploads'
   }))
   uploadFiles(@UploadedFiles() files:Array<Express.Multer.File> ,@Body() body) {
     console.log(body)
@@ -31,6 +31,11 @@ export class AppController {
   merge(@Query('name') name:string){
      const chunkDir = 'uploads/chunks_' + name
      const files = fs.readdirSync(chunkDir)
+     files.sort((a: string, b: string) => {
+      const indexA = parseInt(a.split('-').pop());
+      const indexB = parseInt(b.split('-').pop());
+      return indexA - indexB;
+      });
      console.log(files)
      let startpos = 0
      files?.map((item)=>{
