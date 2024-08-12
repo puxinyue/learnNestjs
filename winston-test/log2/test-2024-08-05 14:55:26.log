@@ -1,0 +1,2 @@
+{"label":"标签","level":"\u001b[32minfo\u001b[39m","message":"Hello world","timestamp":"2024-08-05T06:55:26.030Z"}
+{"label":"标签","level":"\u001b[33mwarn\u001b[39m","message":"Warning message","timestamp":"2024-08-05T06:55:26.032Z"}
