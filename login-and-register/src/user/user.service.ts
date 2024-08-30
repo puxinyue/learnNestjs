@@ -21,16 +21,22 @@ export class UserService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
 
+
  private logger = new Logger();
 
-  login(username: string, password: string) {
-    this.userRepository.findOne({
+  async login(username: string, password: string) {
+   const data = await this.userRepository.findOne({
       where: {
         username,
-        password
       }
     });
-    return 'This action login a user';
+    if(!data){
+      throw new HttpException('用户名错误', 200);
+    }else if(data.password === md5(password)){
+      return data;
+    }else{
+      throw new HttpException('密码错误', 200);
+    }
   }
 
   async register(username: string, password: string) {
