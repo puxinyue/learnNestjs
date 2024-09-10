@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AaaService } from './aaa.service';
 import { CreateAaaDto } from './dto/create-aaa.dto';
 import { UpdateAaaDto } from './dto/update-aaa.dto';
+import { RequirePermission, RequireRole } from 'src/custom-decorator';
 
 @Controller('aaa')
+@RequireRole()
 export class AaaController {
   constructor(private readonly aaaService: AaaService) {}
 
@@ -13,6 +15,7 @@ export class AaaController {
   }
 
   @Get()
+  @RequirePermission('查询 aaa')
   findAll() {
     return this.aaaService.findAll();
   }

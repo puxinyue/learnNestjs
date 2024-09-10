@@ -16,9 +16,9 @@ export class UserController {
   async create(@Body() loginUserDto:LoginUserDto ) {
    const user =  await this.userService.login(loginUserDto);
     
-  const token = await this.jwtService.sign({
+  const token = this.jwtService.sign({
       user:{
-        id:user.id,
+        roles: user.roles,
         username:user.username
       }
     })

@@ -13,6 +13,9 @@ import { AaaModule } from './aaa/aaa.module';
 import { BbbModule } from './bbb/bbb.module';
 import { LoginGuard } from './login.guard';
 import { PermissionGuard } from './permission.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { RedisModule } from './redis/redis.module';
+
 
 @Module({
   imports: [UserModule,TypeOrmModule.forRoot({
@@ -33,12 +36,12 @@ import { PermissionGuard } from './permission.guard';
     global:true,
     secret:'xinyuee',
     signOptions:{expiresIn:'1h'}
-  }), RoleModule, PermissionModule, AaaModule, BbbModule],
+  }), RoleModule, PermissionModule, AaaModule, BbbModule, RedisModule],
   controllers: [AppController],
   providers: [
     AppService,
-    {provide:'APP_GUARD',useClass:LoginGuard},
-    {provide:'APP_GUARD',useClass:PermissionGuard}
+    {provide:APP_GUARD,useClass:LoginGuard},
+    {provide:APP_GUARD,useClass:PermissionGuard},
   ],
 })
 export class AppModule {}

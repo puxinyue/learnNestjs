@@ -15,7 +15,7 @@ export class LoginGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const requireRole = this.reflector.getAllAndOverride('requireRole', [context.getHandler(), context.getClass()]);
-    
+     console.log(requireRole)
    if(!requireRole){
       return true
    }
@@ -25,8 +25,9 @@ export class LoginGuard implements CanActivate {
       throw new UnauthorizedException('用户未登录')
     }
     try {
-      const user = await this.jwtService.verify(token);
-      request.user = user;
+      const data =  this.jwtService.verify(token);
+      request.user = data.user;
+      console.log('====>',data)
       return true
 
     } catch (error) {

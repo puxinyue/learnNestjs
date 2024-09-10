@@ -3,7 +3,7 @@ import { BbbService } from './bbb.service';
 import { CreateBbbDto } from './dto/create-bbb.dto';
 import { UpdateBbbDto } from './dto/update-bbb.dto';
 import { LoginGuard } from 'src/login.guard';
-import { RequireRole } from 'src/custom-decorator';
+import { RequirePermission, RequireRole } from 'src/custom-decorator';
 
 @Controller('bbb')
 @RequireRole()
@@ -16,6 +16,7 @@ export class BbbController {
   }
 
   @Get()
+  @RequirePermission('查询 bbb')
   findAll() {
     return this.bbbService.findAll();
   }
