@@ -30,6 +30,20 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async findUserById(id: number) {
+    const user = await this.entityManager.findOne(User, 
+     {
+      where:{
+       id:id
+      }
+     });
+    if (!user) {
+      throw new HttpException('用户不存在', HttpStatus.ACCEPTED);
+    }
+    return user;
+  }
+
  async login(loginUserDto: any) {
   const user = await this.entityManager.findOne(User,{
       where:{
