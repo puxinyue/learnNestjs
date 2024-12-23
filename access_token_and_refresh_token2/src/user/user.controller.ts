@@ -16,6 +16,20 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Get()
+  getUser1(@Query() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
+
+  @Get('111')
+  getUser2(@Query() createUserDto: CreateUserDto) {
+    return {
+      data: '111'
+    }
+  }
+
+
+
   @Post('login')
   async Login(@Body() loginUserDto: LoginUserDto) {
     const user = await this.userService.login(loginUserDto)
@@ -30,9 +44,9 @@ export class UserController {
 
   @Get('refresh')
   async refresh(@Query('refreshToken') Token: string) {
-    console.log(Token)
     try {
-      const user = this.jwtService.verify(Token)
+      const data = this.jwtService.verify(Token)
+      const user = await this.userService.findUserById(data.userId)
       const accessToken = this.jwtService.sign({ userId: user.id, username: user.username }, { expiresIn: '60s' })
       const refreshToken = this.jwtService.sign({ userId: user.id }, { expiresIn: '1d' })
       return {

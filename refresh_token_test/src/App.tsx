@@ -36,7 +36,6 @@ function App() {
       const res = await refreshToken();
       refrshing = false
       if (res.status === 200) {
-        console.log(done)
         done.forEach(({ config, resolve }) => {
           resolve(axios(config))
         })
@@ -58,30 +57,33 @@ function App() {
         refreshToken: localStorage.getItem('refresh_token')
       }
     });
-    localStorage.setItem('access_token', res.data.access_token || '');
-    localStorage.setItem('refresh_token', res.data.refresh_token || '');
+    localStorage.setItem('access_token', res.data.accessToken || '');
+    localStorage.setItem('refresh_token', res.data.refreshToken || '');
     return res;
   }
 
   const login = async () => {
     const { data } = await axios.post('http://localhost:3000/user/login', {
       username: '张三',
-      password: '111111'
+      password: '123456'
     })
-    localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
+    console.log('asdasadasd', data)
+    localStorage.setItem('access_token', data.accessToken)
+    localStorage.setItem('refresh_token', data.refreshToken)
   }
   const query = async () => {
-    if (!localStorage.getItem('access_token')) {
+    const data = localStorage.getItem('access_token')
+    if (!data || data == '' || data == 'undefined') {
       await login()
     }
     await [
-      axios.get('http://localhost:3000/user'),
-      axios.get('http://localhost:3000/user'),
-      axios.get('http://localhost:3000/user')
+      axios.get('http://localhost:3000/user/bbb'),
+      axios.get('http://localhost:3000/user/bbb'),
+      axios.get('http://localhost:3000/user/bbb')
     ];
-    // const { data: datbbb } = await axios.get('http://localhost:3000/user/111')
-    // const { data: dataaa } = await axios.get('http://localhost:3000/user')
+    // const { data: datbbb } = await axios.get('http://localhost:3000/user/bbb')
+    // const { data: dataaa } = await axios.get('http://localhost:3000/user/aaa')
+    // console.log(dataaa)
     // setuserPage(dataaa)
     // setubbbPage(datbbb)
   }
@@ -91,8 +93,8 @@ function App() {
 
   return (
     <div className="App">
-      <div>{userPage}</div>
-      <div>{bbbPage}</div>
+      <div>{userPage}asda</div>
+      <div>{bbbPage}asdada</div>
     </div>
   );
 }

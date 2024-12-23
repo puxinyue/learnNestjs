@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,9 @@ export class UserService {
   private readonly entityManager: EntityManager;
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return {
+      data: 'This action adds a new user',
+    }
   }
 
   findAll() {
@@ -43,6 +46,15 @@ export class UserService {
       throw new HttpException('密码错误', HttpStatus.OK);
     }
     return user;
+  }
+
+  async findUserById(id: number) {
+    const data = await this.entityManager.findOne(User, {
+      where: {
+        id
+      }
+    });
+    return data;
   }
 
 }
