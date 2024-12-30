@@ -1,29 +1,41 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entity/User';
+import { TestEntity } from './entity/TestEntity';
+import { createClient } from 'redis';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forRoot({
+  imports: [TypeOrmModule.forRoot({
     type: 'mysql',
-    database: 'google_login',
-    entities: [User], // __dirname + '/**/*.entity{.ts,.js}'
-    synchronize: true,
     host: 'localhost',
     port: 3306,
     username: 'root',
     password: 'xinyu',
+    database: 'google_login',
+    entities: [TestEntity],
+    synchronize: true,
     logging: true,
     poolSize: 10,
     connectorPackage: 'mysql2',
     extra: {
       authPlugin: 'sha256_password'
     }
-
   })],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: "REDIS_CLIENT",
+    useFactory: async () => {
+      const client = createClient({
+        socket: {
+          host: 'localhost',
+          port: 6379
+        }
+      });
+      await client.connect();
+      return client;
+
+    }
+  }],
 })
 export class AppModule { }

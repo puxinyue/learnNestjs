@@ -19,14 +19,16 @@ export class AppController {
 
   @Get('callback/google')
   @UseGuards(AuthGuard('google'))
-  googleLoginCallback(@Request() req) {
-    if (!req.user) {
-      return 'No user from google'
+  async googleLoginCallback(@Request() req) {
+
+    const user = await this.appService.getUserByEmail(req.user.email);
+
+    if (!user) {
+      const newuser = await this.appService.registerByGoogleInfo(req.user);
+      return newuser;
+    } else {
+      return user;
     }
 
-    return {
-      message: 'User information from google',
-      user: req.user
-    }
   }
 }

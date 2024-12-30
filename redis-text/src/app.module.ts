@@ -6,11 +6,11 @@ import { createClient } from 'redis';
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService,{
+  providers: [AppService, {
     provide: 'REDIS_CLIENT',
     useFactory: () => {
       const client = createClient({
-        socket:{
+        socket: {
           host: 'localhost',
           port: 6379,
         }
@@ -20,4 +20,4 @@ import { createClient } from 'redis';
     },
   }],
 })
-export class AppModule {}
+export class AppModule { }

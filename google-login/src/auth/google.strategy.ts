@@ -15,6 +15,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/callback/google',
+      agent: agent,
       scope: ['email', 'profile'],
     });
     this._oauth2.setAgent(agent)
