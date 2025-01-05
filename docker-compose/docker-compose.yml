@@ -1,40 +1,35 @@
-version: '3'
+version: '3.8'
 services:
-  app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+  nest-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: always #总是重启
     depends_on:
-      - redis
-      - mysql
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=xinyu
-      - MYSQL_DATABASE=google_login
-
-  redis:
-    image: redis:alpine
+      - mysql-container
+      - redis-container
     ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+      - '3000:3000'
+    networks:
+      - common-network
 
-  mysql:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
+  mysql-container:
+    image: mysql
+    volumes:
+      - D:\mysql-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=xinyu
-      - MYSQL_DATABASE=google_login
-    volumes:
-      - mysql_data:/var/lib/mysql
+      MYSQL_DATABASE: google_login
+      MYSQL_ROOT_PASSWORD: xinyu
+    networks:
+      - common-network
 
-volumes:
-  redis_data:
-  mysql_data: 
+  redis-container:
+    image: redis
+    volumes:
+      - D:\aaa:/data
+    networks:
+      - common-network
+
+networks:           # 这里的缩进要和 services 同级
+  common-network:   # 定义网络
+    driver: bridge

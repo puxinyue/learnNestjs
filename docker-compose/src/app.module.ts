@@ -8,7 +8,7 @@ import { createClient } from 'redis';
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
-    host: 'localhost',
+    host: 'mysql-container',  // host.docker.internal
     port: 3306,
     username: 'root',
     password: 'xinyu',
@@ -24,17 +24,16 @@ import { createClient } from 'redis';
   })],
   controllers: [AppController],
   providers: [AppService, {
-    provide: "REDIS_CLIENT",
-    useFactory: async () => {
+    provide: 'REDIS_CLIENT',
+    async useFactory() {
       const client = createClient({
-        socket: {
-          host: 'localhost',
-          port: 6379
-        }
+          socket: {
+              host: 'redis-container',
+              port: 6379
+          }
       });
       await client.connect();
       return client;
-
     }
   }],
 })
