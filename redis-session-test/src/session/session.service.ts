@@ -12,9 +12,11 @@ export class SessionService {
       // 没有id情况下生成一个
       key = this.generateSid();
     }
-    return await this.redisService.set(`sid_${key}`, value, ttl);
+    await this.redisService.set(`sid_${key}`, value, ttl);
+    return key;
   }
   //get session
+  async getSession<SessionType extends Record<string, any>>(key: string): Promise<SessionType>;
   async getSession(key: string) {
     return await this.redisService.getAll(`sid_${key}`);
   }
