@@ -11,7 +11,8 @@ export class EmailController {
 
   @Get('code')
   async sendCode(@Query('email') email: string) {
-    const code = Math.random().toString(36).substring(2, 15);
+    // 生成6位随机验证码
+    const code = Math.random().toString(36).substring(2, 8);
     await this.redisService.set(email, code, 60 * 5);
     await this.emailService.sendEmail(email, code);
     return {

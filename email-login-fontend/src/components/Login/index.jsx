@@ -6,6 +6,15 @@ export default function Login() {
  const [form] = Form.useForm();;
   const onFinish = async(values) => {
     console.log(values);
+    const data = await axios.post('http://localhost:3001/user/login', {
+      email: values.email,
+      code: values.password
+    })
+    if(data?.data === 'success') {
+      console.log('登录成功');
+    } else {
+      console.log('登录失败');
+    }
   };
   const sendCode = async() =>{
     const email = form.getFieldValue('email');
@@ -15,10 +24,15 @@ export default function Login() {
     }
     const data = await axios.get('http://localhost:3001/email/code', {
       params: {
-        email: email
+        email: email,
       }
     })
-    console.log('sendCode===>',data);
+
+    if(data?.data) {
+      console.log('发送验证码成功');
+    } else {
+      console.log('发送验证码失败');
+    }
   }
   return (
     <div>
