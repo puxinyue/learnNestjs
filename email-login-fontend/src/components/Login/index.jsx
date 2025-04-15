@@ -1,16 +1,22 @@
 import React from 'react'
-import { useState } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 export default function Login() {
- const [form] = Form.useForm();
+ const [form] = Form.useForm();;
   const onFinish = async(values) => {
     console.log(values);
   };
   const sendCode = async() =>{
-   const data = await axios.get('http://localhost:3001', {
-      email: form.getFieldValue('email')
+    const email = form.getFieldValue('email');
+    if(!email){
+      console.log('请输入邮箱');
+      return;
+    }
+    const data = await axios.get('http://localhost:3001/email/code', {
+      params: {
+        email: email
+      }
     })
     console.log('sendCode===>',data);
   }
