@@ -11,7 +11,7 @@ export class User {
     comment: '邮箱',
   })
   email: string;
- 
+
   @Column({
     length: 50,
     comment: '密码',
