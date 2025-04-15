@@ -1,6 +1,7 @@
 
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
+// asdsasa
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -8,4 +9,5 @@ export class User {
 
   @Column()
   email: string;
+
 }
