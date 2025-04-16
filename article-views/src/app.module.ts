@@ -6,11 +6,14 @@ import { UserModule } from './user/user.module';
 import { ArticleModule } from './article/article.module';
 import { User } from './user/entities/user.entity';
 import { Article } from './article/entities/article.entity';
+import { RedisModule } from './redis/redis.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskModule } from './task/task.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type: 'mysql',  
+  imports: [ScheduleModule.forRoot(), TypeOrmModule.forRoot({
+    type: 'mysql',
     host: '127.0.0.1',
     port: 3306,
     username: 'root',
@@ -23,8 +26,8 @@ import { Article } from './article/entities/article.entity';
     },
     logging: true,
     synchronize: true,
-  }), UserModule, ArticleModule],
+  }), UserModule, ArticleModule, RedisModule, TaskModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

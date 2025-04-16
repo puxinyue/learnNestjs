@@ -32,5 +32,5 @@ export class Article {
         default: 0
     })
     collect: number;
-    
+
 }
